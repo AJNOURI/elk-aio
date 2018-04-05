@@ -1,0 +1,10 @@
+mkdir /esdata
+docker run -d --name elasticsearch  -p 9200:9200 -p 9300:9300 -v /esdata:/usr/share/elasticsearch/data elasticsearch
+
+mkdir /logstash
+vi /logstash/logstash.conf
+
+cd /logstash/
+docker run -d --name logstash -p 5044:5044 --link elasticsearch:elasticsearch -v "$PWD":/logstash logstash -f /logstash/logstash.conf
+
+docker run --name kibana --link elasticsearch:elasticsearch -p 5601:5601 -d kibana
